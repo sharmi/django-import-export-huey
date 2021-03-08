@@ -1,8 +1,12 @@
 from django.apps import apps
 from import_export.resources import modelresource_factory
-from celery.utils.log import get_task_logger
+#from celery.utils.log import get_task_logger
+import logging
 
-log = get_task_logger(__name__)
+logger = logging.getLogger(__name__)
+
+log = logging.getLogger('huey')
+
 
 
 class ModelConfig:

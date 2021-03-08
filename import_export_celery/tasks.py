@@ -3,7 +3,8 @@
 from datetime import datetime
 import os
 
-from celery import shared_task
+#from celery import shared_task
+from huey.contrib.djhuey import db_periodic_task, db_task
 
 from django.conf import settings
 from django.core.files.base import ContentFile
@@ -19,12 +20,12 @@ from import_export.formats.base_formats import DEFAULT_FORMATS
 from . import models
 from .model_config import ModelConfig
 
-from celery.utils.log import get_task_logger
+#from celery.utils.log import get_task_logger
 import logging
 
 logger = logging.getLogger(__name__)
 
-log = get_task_logger(__name__)
+log = logging.getLogger('huey')
 
 
 importables = getattr(settings, "IMPORT_EXPORT_CELERY_MODELS", {})
@@ -175,7 +176,7 @@ def _run_import_job(import_job, dry_run=True):
     import_job.save()
 
 
-@shared_task(bind=False)
+@db_task
 def run_import_job(pk, dry_run=True):
     log.info("Importing %s dry-run %s" % (pk, dry_run))
     import_job = models.ImportJob.objects.get(pk=pk)
@@ -188,7 +189,7 @@ def run_import_job(pk, dry_run=True):
         return
 
 
-@shared_task(bind=False)
+@db_task
 def run_export_job(pk):
     log.info("Exporting %s" % pk)
     export_job = models.ExportJob.objects.get(pk=pk)
