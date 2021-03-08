@@ -176,7 +176,7 @@ def _run_import_job(import_job, dry_run=True):
     import_job.save()
 
 
-@db_task
+@db_task()
 def run_import_job(pk, dry_run=True):
     log.info("Importing %s dry-run %s" % (pk, dry_run))
     import_job = models.ImportJob.objects.get(pk=pk)
@@ -189,7 +189,7 @@ def run_import_job(pk, dry_run=True):
         return
 
 
-@db_task
+@db_task()
 def run_export_job(pk):
     log.info("Exporting %s" % pk)
     export_job = models.ExportJob.objects.get(pk=pk)
