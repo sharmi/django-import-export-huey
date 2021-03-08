@@ -131,4 +131,4 @@ def exportjob_post_save(sender, instance, **kwargs):
     if instance.resource and not instance.processing_initiated:
         instance.processing_initiated = datetime.now()
         instance.save()
-        run_export_job.delay(instance.pk)
+        run_export_job(instance.pk)
